@@ -1,12 +1,46 @@
-language: python
-python:
-  - 3.8
-  - 3.7
-  - 3.6
+language: generic
 before_install:
   - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
   - source $HOME/.poetry/env
 install:
   - poetry install
-script:
-  - pytest -v
+
+jobs:
+  include:
+    - language: python
+      python: 3.8
+      script:
+        - pytest -v
+
+    - language: python
+      python: 3.7
+      script:
+        - pytest -v
+
+    - language: python
+      python: 3.6
+      script:
+        - pytest -v
+
+    - language: rust
+      sudo: false
+
+      branches:
+        only:
+          - master
+          - /^doc\..*$/
+          - /^doc-.*$/
+
+      cache:
+        - cargo
+
+      rust:
+        - stable
+
+      before_script:
+        - (test -x $HOME/.cargo/bin/cargo-install-update || cargo install cargo-update)
+        - (test -x $HOME/.cargo/bin/mdbook || cargo install --vers "^0.3" mdbook)
+        - cargo install-update -a
+
+      script:
+        - mdbook build doc && mdbook test doc
