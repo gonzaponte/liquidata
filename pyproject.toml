@@ -5,10 +5,8 @@ description = ""
 authors = ["Jacek Generowicz <github@my-post-office.net>"]
 license = "MIT"
 
-[tool.poetry.dependencies]
-python = "^3.6"
-
 [tool.poetry.dev-dependencies]
+python = "^3.6"
 pytest = "^5.4.1"
 hypothesis = "^5.6.0"
 
