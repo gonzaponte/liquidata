@@ -225,29 +225,32 @@ def test_push_futures_mapping():
 
 
 def test_reduce():
-
-    # 'reduce' provides a high-level way of creating future-sinks such
-    # as 'count'
-
-    # Make a component just like df.sum
-    from operator import add
-    total = df.reduce(add, initial=0)
-
-    # Create two instances of it, which will be applied to different
-    # (forked) sub-streams in the network
-    total_all = total()
-    total_odd = total()
-
+# ANCHOR: reduce
+    # Some dummy data, for testing
     N = 15
-    the_source = list(range(N))
+    the_data = list(range(N))
 
-    result = df.push(source = the_source,
-                     pipe   = df.fork(                                 total_all.sink,
-                                      df.pipe(df.filter(lambda n:n%2), total_odd.sink)),
-                     result = (total_all.future, total_odd.future))
+    # A binary function which returns the sum of its arguments
+    from operator import add
+    # Alternatively, we could have defined this ourselves as
+    # def add(a, b):
+    #     return a + b
 
-    sum_all, sum_odd = sum(the_source), (N // 2) ** 2
-    assert result == (sum_all, sum_odd)
+    # df.reduce can be used to turn a binary function into a sink factory
+    df_sum = df.reduce(add, initial=0)
+
+    # The factory returns a namedtuple containing a future and sink
+    ssum = df_sum()
+
+    result = df.push(source = the_data,
+                     # The sink can be used to cap a pipe
+                     pipe   = ssum.sink,
+                     # The future can be used to specify the return value of push
+                     result = ssum.future)
+    # The component we created is the dataflow equivalent of Python's builtin
+    # sum
+    assert result == sum(the_data)
+# ANCHOR_END: reduce
 
 
 @mark.xfail
