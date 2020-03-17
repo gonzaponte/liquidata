@@ -7,3 +7,7 @@ title = "Dataflow"
 
 [output.html]
 default-theme = "ayu"
+
+[output.html.fold]
+enable = true
+level  = 3
