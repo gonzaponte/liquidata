@@ -6,7 +6,9 @@ src = "src"
 title = "Dataflow"
 
 [output.html]
-default-theme = "ayu"
+default-theme  = "ayu"
+additional-css = ["mermaid.css"]
+additional-js  = ["mermaid.min.js", "mermaid-init.js"]
 
 [output.html.fold]
 enable = true
@@ -14,3 +16,7 @@ level  = 3
 
 [preprocessor.toc]
 command = "mdbook-toc"
+
+[preprocessor.mermaid]
+command  = "mdbook-mermaid"
+renderer = ["html"]
