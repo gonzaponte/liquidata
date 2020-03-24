@@ -1,3 +1,6 @@
+
+<!-- toc -->
+
 # Introduction
 
 For now, I'll just write everything here, then, as it takes shape, we can decide
